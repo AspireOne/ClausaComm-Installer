@@ -30,9 +30,10 @@ namespace ClausaComm_Installer.Forms
             InstallationLocationQuestion.Text = LocalizedStrings.WhereDoYouWantToInstallClausaCommTo;
             Title.Text = LocalizedStrings.ClausaCommInstallation;
             DotnetInstalledLabel.Text = LocalizedStrings.DotnetNotInstalledDoYouWantToDownloadAndInstallNow;
-            CloseAndRemoveButton.Text = LocalizedStrings.CloseAndRemoveThisInstaller;
+            CloseButton.Text = LocalizedStrings.Close;
             Text = LocalizedStrings.ClausaCommInstaller;
             ManualDownloadLink.Text = LocalizedStrings.YouCanAlsoInstallItManually;
+            RemoveInstallerCheckbox.Text = LocalizedStrings.RemoveThisInstallationFile;
         }
 
         private void DotnetInstallButton_Click(object sender, EventArgs e)
@@ -129,7 +130,9 @@ namespace ClausaComm_Installer.Forms
                 if (error == null)
                 {
                     ClausaCommInstallationProgress.Text = LocalizedStrings.InstalledSuccesfully;
-                    CloseAndRemoveButton.Visible = true;
+                    ClosePanel.Visible = true;
+                    foreach (Control c in InstallationPathSelectionPanel.Controls)
+                        c.Enabled = false;
                     return;   
                 }
 
@@ -156,10 +159,11 @@ namespace ClausaComm_Installer.Forms
                 InvokeOnMainThread(() => InstallationPathTextbox.Text = path);
         }
 
-        private void CloseAndRemoveButton_Click(object sender, EventArgs e)
+        private void CloseButton_Click(object sender, EventArgs e)
         {
             //TODO: Try switch admin on
-            ConsoleUtils.RunProcess(ConsoleUtils.GetDelay(1) + " & del /f /q \"" + Paths.ThisProgram + '"', true, false);
+            if (RemoveInstallerCheckbox.Checked)
+                ConsoleUtils.RunProcess(ConsoleUtils.GetDelay(1) + " & del /f /q \"" + Paths.ThisProgram + '"', true, false);
             Program.Terminate();
         }
 
@@ -171,6 +175,11 @@ namespace ClausaComm_Installer.Forms
         private void ResetPathButton_Click(object sender, EventArgs e)
         {
             InstallationPathTextbox.Text = InstallationDir.DefaultInstallationDir;
+        }
+
+        private void ContentPanel_Paint(object sender, PaintEventArgs e)
+        {
+
         }
     }
 }

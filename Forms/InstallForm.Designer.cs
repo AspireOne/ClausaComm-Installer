@@ -34,12 +34,16 @@ namespace ClausaComm_Installer.Forms
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(InstallForm));
             this.Title = new System.Windows.Forms.Label();
             this.ContentPanel = new System.Windows.Forms.Panel();
+            this.RemoveInstallerCheckbox = new System.Windows.Forms.CheckBox();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.VerticalLine1 = new System.Windows.Forms.Panel();
             this.InstallButton = new System.Windows.Forms.Button();
             this.InstallationPathSelectionPanel = new System.Windows.Forms.Panel();
+            this.ResetPathButton = new System.Windows.Forms.Button();
             this.InstallationLocationQuestion = new System.Windows.Forms.Label();
             this.ChooseInstallationDirButton = new System.Windows.Forms.Button();
             this.InstallationPathTextbox = new System.Windows.Forms.TextBox();
-            this.CloseAndRemoveButton = new System.Windows.Forms.Button();
+            this.CloseButton = new System.Windows.Forms.Button();
             this.ClausaCommInstallationProgress = new System.Windows.Forms.Label();
             this.DotnetNotInstalledPanel = new System.Windows.Forms.Panel();
             this.ManualDownloadLink = new System.Windows.Forms.LinkLabel();
@@ -47,10 +51,11 @@ namespace ClausaComm_Installer.Forms
             this.DotnetInstallationProgressBar = new System.Windows.Forms.ProgressBar();
             this.DotnetInstallButton = new System.Windows.Forms.Button();
             this.DotnetInstalledLabel = new System.Windows.Forms.Label();
-            this.ResetPathButton = new System.Windows.Forms.Button();
+            this.ClosePanel = new System.Windows.Forms.Panel();
             this.ContentPanel.SuspendLayout();
             this.InstallationPathSelectionPanel.SuspendLayout();
             this.DotnetNotInstalledPanel.SuspendLayout();
+            this.ClosePanel.SuspendLayout();
             this.SuspendLayout();
             // 
             // Title
@@ -62,14 +67,14 @@ namespace ClausaComm_Installer.Forms
             this.Title.Name = "Title";
             this.Title.Size = new System.Drawing.Size(786, 83);
             this.Title.TabIndex = 0;
-            this.Title.Text = "ClausaComm Installation";
+            this.Title.Text = "{ClausaComm Installation}";
             this.Title.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // ContentPanel
             // 
+            this.ContentPanel.Controls.Add(this.ClosePanel);
             this.ContentPanel.Controls.Add(this.InstallButton);
             this.ContentPanel.Controls.Add(this.InstallationPathSelectionPanel);
-            this.ContentPanel.Controls.Add(this.CloseAndRemoveButton);
             this.ContentPanel.Controls.Add(this.ClausaCommInstallationProgress);
             this.ContentPanel.Controls.Add(this.DotnetNotInstalledPanel);
             this.ContentPanel.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -79,6 +84,37 @@ namespace ClausaComm_Installer.Forms
             this.ContentPanel.Name = "ContentPanel";
             this.ContentPanel.Size = new System.Drawing.Size(786, 331);
             this.ContentPanel.TabIndex = 1;
+            this.ContentPanel.Paint += new System.Windows.Forms.PaintEventHandler(this.ContentPanel_Paint);
+            // 
+            // RemoveInstallerCheckbox
+            // 
+            this.RemoveInstallerCheckbox.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.RemoveInstallerCheckbox.Checked = true;
+            this.RemoveInstallerCheckbox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.RemoveInstallerCheckbox.Font = new System.Drawing.Font("Microsoft YaHei", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.RemoveInstallerCheckbox.Location = new System.Drawing.Point(33, 6);
+            this.RemoveInstallerCheckbox.Name = "RemoveInstallerCheckbox";
+            this.RemoveInstallerCheckbox.Size = new System.Drawing.Size(211, 21);
+            this.RemoveInstallerCheckbox.TabIndex = 14;
+            this.RemoveInstallerCheckbox.UseVisualStyleBackColor = true;
+            // 
+            // panel1
+            // 
+            this.panel1.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panel1.Location = new System.Drawing.Point(26, 2);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(216, 1);
+            this.panel1.TabIndex = 13;
+            // 
+            // VerticalLine1
+            // 
+            this.VerticalLine1.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.VerticalLine1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.VerticalLine1.Location = new System.Drawing.Point(26, 3);
+            this.VerticalLine1.Name = "VerticalLine1";
+            this.VerticalLine1.Size = new System.Drawing.Size(1, 72);
+            this.VerticalLine1.TabIndex = 12;
             // 
             // InstallButton
             // 
@@ -90,7 +126,7 @@ namespace ClausaComm_Installer.Forms
             this.InstallButton.Name = "InstallButton";
             this.InstallButton.Size = new System.Drawing.Size(184, 64);
             this.InstallButton.TabIndex = 2;
-            this.InstallButton.Text = "Install";
+            this.InstallButton.Text = "{Install}";
             this.InstallButton.UseVisualStyleBackColor = true;
             this.InstallButton.Click += new System.EventHandler(this.InstallButton_Click);
             // 
@@ -105,6 +141,17 @@ namespace ClausaComm_Installer.Forms
             this.InstallationPathSelectionPanel.Size = new System.Drawing.Size(701, 57);
             this.InstallationPathSelectionPanel.TabIndex = 11;
             // 
+            // ResetPathButton
+            // 
+            this.ResetPathButton.Location = new System.Drawing.Point(633, 30);
+            this.ResetPathButton.Name = "ResetPathButton";
+            this.ResetPathButton.Size = new System.Drawing.Size(61, 24);
+            this.ResetPathButton.TabIndex = 10;
+            this.ResetPathButton.Text = "{reset}";
+            this.ResetPathButton.UseVisualStyleBackColor = true;
+            this.ResetPathButton.Visible = false;
+            this.ResetPathButton.Click += new System.EventHandler(this.ResetPathButton_Click);
+            // 
             // InstallationLocationQuestion
             // 
             this.InstallationLocationQuestion.Anchor = System.Windows.Forms.AnchorStyles.None;
@@ -114,7 +161,7 @@ namespace ClausaComm_Installer.Forms
             this.InstallationLocationQuestion.Name = "InstallationLocationQuestion";
             this.InstallationLocationQuestion.Size = new System.Drawing.Size(327, 25);
             this.InstallationLocationQuestion.TabIndex = 1;
-            this.InstallationLocationQuestion.Text = "Where do you want to install ClausaComm to?";
+            this.InstallationLocationQuestion.Text = "{Where do you want to install ClausaComm to?}";
             // 
             // ChooseInstallationDirButton
             // 
@@ -137,17 +184,18 @@ namespace ClausaComm_Installer.Forms
             this.InstallationPathTextbox.TabIndex = 0;
             this.InstallationPathTextbox.TextChanged += new System.EventHandler(this.PathTextbox_TextChanged);
             // 
-            // CloseAndRemoveButton
+            // CloseButton
             // 
-            this.CloseAndRemoveButton.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
-            this.CloseAndRemoveButton.Location = new System.Drawing.Point(630, 274);
-            this.CloseAndRemoveButton.Name = "CloseAndRemoveButton";
-            this.CloseAndRemoveButton.Size = new System.Drawing.Size(144, 45);
-            this.CloseAndRemoveButton.TabIndex = 10;
-            this.CloseAndRemoveButton.Text = "Close and remove this installer";
-            this.CloseAndRemoveButton.UseVisualStyleBackColor = true;
-            this.CloseAndRemoveButton.Visible = false;
-            this.CloseAndRemoveButton.Click += new System.EventHandler(this.CloseAndRemoveButton_Click);
+            this.CloseButton.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
+            this.CloseButton.AutoSize = true;
+            this.CloseButton.Font = new System.Drawing.Font("Microsoft YaHei", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
+            this.CloseButton.Location = new System.Drawing.Point(70, 33);
+            this.CloseButton.Name = "CloseButton";
+            this.CloseButton.Size = new System.Drawing.Size(130, 43);
+            this.CloseButton.TabIndex = 10;
+            this.CloseButton.Text = "{Close}";
+            this.CloseButton.UseVisualStyleBackColor = true;
+            this.CloseButton.Click += new System.EventHandler(this.CloseButton_Click);
             // 
             // ClausaCommInstallationProgress
             // 
@@ -177,10 +225,10 @@ namespace ClausaComm_Installer.Forms
             this.ManualDownloadLink.LinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(255)))));
             this.ManualDownloadLink.Location = new System.Drawing.Point(3, 124);
             this.ManualDownloadLink.Name = "ManualDownloadLink";
-            this.ManualDownloadLink.Size = new System.Drawing.Size(210, 17);
+            this.ManualDownloadLink.Size = new System.Drawing.Size(218, 17);
             this.ManualDownloadLink.TabIndex = 8;
             this.ManualDownloadLink.TabStop = true;
-            this.ManualDownloadLink.Text = "You can also download it manually";
+            this.ManualDownloadLink.Text = "{You can also download it manually}";
             this.ManualDownloadLink.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(255)))));
             this.ManualDownloadLink.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.ManualDotnetInstallLink_Clicked);
             // 
@@ -205,7 +253,7 @@ namespace ClausaComm_Installer.Forms
             this.DotnetInstallButton.Name = "DotnetInstallButton";
             this.DotnetInstallButton.Size = new System.Drawing.Size(105, 38);
             this.DotnetInstallButton.TabIndex = 8;
-            this.DotnetInstallButton.Text = "Install";
+            this.DotnetInstallButton.Text = "{Install}";
             this.DotnetInstallButton.UseVisualStyleBackColor = true;
             this.DotnetInstallButton.Click += new System.EventHandler(this.DotnetInstallButton_Click);
             // 
@@ -216,20 +264,21 @@ namespace ClausaComm_Installer.Forms
             this.DotnetInstalledLabel.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(21)))), ((int)(((byte)(21)))), ((int)(((byte)(21)))));
             this.DotnetInstalledLabel.Location = new System.Drawing.Point(3, 9);
             this.DotnetInstalledLabel.Name = "DotnetInstalledLabel";
-            this.DotnetInstalledLabel.Size = new System.Drawing.Size(447, 18);
+            this.DotnetInstalledLabel.Size = new System.Drawing.Size(457, 18);
             this.DotnetInstalledLabel.TabIndex = 7;
-            this.DotnetInstalledLabel.Text = ".NET 5 is not installed. Do you want to download and install it now?";
+            this.DotnetInstalledLabel.Text = "{.NET 5 is not installed. Do you want to download and install it now?}";
             // 
-            // ResetPathButton
+            // ClosePanel
             // 
-            this.ResetPathButton.Location = new System.Drawing.Point(633, 30);
-            this.ResetPathButton.Name = "ResetPathButton";
-            this.ResetPathButton.Size = new System.Drawing.Size(61, 24);
-            this.ResetPathButton.TabIndex = 10;
-            this.ResetPathButton.Text = "reset";
-            this.ResetPathButton.UseVisualStyleBackColor = true;
-            this.ResetPathButton.Visible = false;
-            this.ResetPathButton.Click += new System.EventHandler(this.ResetPathButton_Click);
+            this.ClosePanel.Controls.Add(this.panel1);
+            this.ClosePanel.Controls.Add(this.RemoveInstallerCheckbox);
+            this.ClosePanel.Controls.Add(this.CloseButton);
+            this.ClosePanel.Controls.Add(this.VerticalLine1);
+            this.ClosePanel.Location = new System.Drawing.Point(536, 249);
+            this.ClosePanel.Name = "ClosePanel";
+            this.ClosePanel.Size = new System.Drawing.Size(250, 82);
+            this.ClosePanel.TabIndex = 15;
+            this.ClosePanel.Visible = false;
             // 
             // InstallForm
             // 
@@ -248,6 +297,8 @@ namespace ClausaComm_Installer.Forms
             this.InstallationPathSelectionPanel.PerformLayout();
             this.DotnetNotInstalledPanel.ResumeLayout(false);
             this.DotnetNotInstalledPanel.PerformLayout();
+            this.ClosePanel.ResumeLayout(false);
+            this.ClosePanel.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -267,9 +318,13 @@ namespace ClausaComm_Installer.Forms
         private LinkLabel ManualDownloadLink;
         private Label ClausaCommInstallationProgress;
         private Button ChooseInstallationDirButton;
-        private Button CloseAndRemoveButton;
+        private Button CloseButton;
         private Panel InstallationPathSelectionPanel;
         private Button ResetPathButton;
+        private Panel VerticalLine1;
+        private Panel panel1;
+        private CheckBox RemoveInstallerCheckbox;
+        private Panel ClosePanel;
     }
 }
 

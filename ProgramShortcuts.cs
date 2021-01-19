@@ -11,10 +11,10 @@ namespace ClausaComm_Installer
     {
         public enum DeletionSuccess { Full, Partial, None }
         private const string Extension = ".lnk";
-        private static readonly string ProgramStartMenuDir = Path.Combine(Paths.StartMenuDir, Program.ClausaCommName);
-        private static readonly string ProgramStartMenuShortcut = Path.Combine(ProgramStartMenuDir, Program.ClausaCommName + Extension);
-        private static readonly string ProgramDesktopShortcut = Path.Combine(Paths.Desktop, Program.ClausaCommName + Extension);
-        private static readonly string UninstallerStartMenuShortcut = Path.Combine(ProgramStartMenuDir, "Uninstall " + Program.ClausaCommName + Extension);
+        public static readonly string ProgramStartMenuDir = Path.Combine(Paths.StartMenuDir, Program.ClausaCommName);
+        public static readonly string ProgramStartMenuShortcut = Path.Combine(ProgramStartMenuDir, Program.ClausaCommName + Extension);
+        public static readonly string ProgramDesktopShortcut = Path.Combine(Paths.Desktop, Program.ClausaCommName + Extension);
+        public static readonly string UninstallerStartMenuShortcut = Path.Combine(ProgramStartMenuDir, "Uninstall " + Program.ClausaCommName + Extension);
         private static readonly WshShell Shell = new WshShell();
 
         public static void AddShortcutsToStartMenu(string programPath, string uninstallerExePath)

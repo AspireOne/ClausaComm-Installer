@@ -51,6 +51,7 @@ namespace ClausaComm_Installer.Forms
             // 
             // UninstallButton
             // 
+            this.UninstallButton.AutoSize = true;
             this.UninstallButton.Font = new System.Drawing.Font("Microsoft YaHei", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(238)));
             this.UninstallButton.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(44)))), ((int)(((byte)(44)))), ((int)(((byte)(44)))));
             this.UninstallButton.Location = new System.Drawing.Point(116, 150);
@@ -96,6 +97,7 @@ namespace ClausaComm_Installer.Forms
             this.Name = "UninstallForm";
             this.Text = "Uninstall ClausaComm";
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -103,7 +105,7 @@ namespace ClausaComm_Installer.Forms
 
         private System.Windows.Forms.Label DoYouWishToUninstallLbl;
         private System.Windows.Forms.Button UninstallButton;
-        private System.Windows.Forms.Button CancelButton;
+        private new System.Windows.Forms.Button CancelButton;
         private System.Windows.Forms.Label UninstallationProgress;
     }
 }

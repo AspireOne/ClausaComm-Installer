@@ -36,6 +36,10 @@ namespace ClausaComm_Installer
         }
 
         /*
+         * The rules below are just general guidelines, but practically, every specific instance and a specific context has it's string
+         * stored in this class without being meant (or be able) to be reused, and many of them slightly violate those guidelines.
+         *
+         *
          * Normally named properties are full sentences or words (e.g. beginning with an upper case letter and ending with a punctuation,
          * except for some specific instances and some words, which may not end with a punctuation or start with an uppercase letter).
          *
@@ -46,6 +50,7 @@ namespace ClausaComm_Installer
          * The names of the properties should be the exact string contained without special characters, except for some specific instances,
          * where the name of the property may be the point the string is adressing, e.g. "property SuccesfullInstallation | string "The
          * installation was succesfull").
+         *
         */
 
         public static string InstalledSuccesfully
@@ -58,6 +63,22 @@ namespace ClausaComm_Installer
                         return "Installed succesfully!";
                     case Language.Czech:
                         return "Úspěšně nainstalováno!";
+                    default:
+                        throw new NotImplementedException();
+                }
+            }
+        }
+
+        public static string OpenUninstallationFile
+        {
+            get
+            {
+                switch (CurrLang)
+                {
+                    case Language.English:
+                        return "Open uninstaller";
+                    case Language.Czech:
+                        return "Otevřít odinstalační soubor";
                     default:
                         throw new NotImplementedException();
                 }
@@ -305,16 +326,16 @@ namespace ClausaComm_Installer
             }
         }
 
-        public static string CloseAndRemoveThisInstaller
+        public static string RemoveThisInstallationFile
         {
             get
             {
                 switch (CurrLang)
                 {
                     case Language.English:
-                        return "Close and remove this installer";
+                        return "Remove this installation file";
                     case Language.Czech:
-                        return "Zavřít a smazat tento instalační soubor";
+                        return "Smazat tento instalační soubor";
                     default:
                         throw new NotImplementedException();
                 }
