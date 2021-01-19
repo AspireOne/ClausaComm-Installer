@@ -19,7 +19,6 @@ namespace ClausaComm_Installer
         public const string ClausaCommName = "ClausaComm";
         public const string ClausaCommExeName = ClausaCommName + ".exe";
         public const string ProgramDescription = "ClausaComm - a LAN chatting app.";
-        public const string InstallerExeName = "ClausaComm Installer.exe";
         public static readonly bool AlreadyInstalled = ClausaCommInstallation.IsInstalled();
 
         /// <summary>

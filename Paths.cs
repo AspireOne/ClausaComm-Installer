@@ -32,11 +32,20 @@ namespace ClausaComm_Installer
             if (path != null)
                 return path;
 
-            string installerGuessedPath = Path.Combine(Directory.GetCurrentDirectory(), Program.InstallerExeName);
+            string installerGuessedPath1 = Path.Combine(Directory.GetCurrentDirectory(), "ClausaComm Installer.exe");
+            string installerGuessedPath2 = Path.Combine(Directory.GetCurrentDirectory(), "ClausaComm.Installer.exe");
             string uninstallerGuessedPath = Path.Combine(Directory.GetCurrentDirectory(), ClausaCommUninstallation.UninstallerExeName);
-            
-            return File.Exists(installerGuessedPath) ? installerGuessedPath : File.Exists(uninstallerGuessedPath) ? uninstallerGuessedPath : null;
 
+            if (File.Exists(installerGuessedPath1))
+                return installerGuessedPath1;
+
+            if (File.Exists(installerGuessedPath2))
+                return installerGuessedPath2;
+
+            if (File.Exists(uninstallerGuessedPath))
+                return uninstallerGuessedPath;
+
+            return null;
         }
 
         private static string TryAndCatchNullReference(Func<string> function)
