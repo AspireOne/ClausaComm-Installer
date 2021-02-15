@@ -8,7 +8,7 @@ using System.Windows.Forms;
 namespace ClausaComm_Installer
 {
 
-    internal class LocalizedStrings
+    internal static class LocalizedStrings
     {
         private enum Language
         {
@@ -292,7 +292,7 @@ namespace ClausaComm_Installer
                 }
             }
         }
-        
+
 
         public static string ClausaCommInstaller
         {
