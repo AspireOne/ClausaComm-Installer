@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Windows.Forms;
+// ReSharper disable InconsistentNaming | Custom naming rules
 
 namespace ClausaComm_Installer
 {
@@ -14,7 +13,7 @@ namespace ClausaComm_Installer
         {
             English,
             Czech
-        };
+        }
 
         // Creating a dict and then converting it to keyvaluepair because we couldn't use inline initialization otherwise.
         private static readonly KeyValuePair<Language, string>[] LangCodes = new Dictionary<Language, string>
@@ -29,10 +28,7 @@ namespace ClausaComm_Installer
         {
             var langPair = LangCodes.FirstOrDefault(x => x.Value == CultureInfo.CurrentUICulture.TwoLetterISOLanguageName);
 
-            if (langPair.Equals(default(KeyValuePair<Language, string>)))
-                return Language.English;
-
-            return langPair.Key;
+            return langPair.Equals(default(KeyValuePair<Language, string>)) ? Language.English : langPair.Key;
         }
 
         /*
@@ -496,22 +492,6 @@ namespace ClausaComm_Installer
                         return ".NET Installed! ClausaComm may not be able to start until you restart your PC.";
                     case Language.Czech:
                         return ".NET naistalován! ClausaComm možná nebude moci fungovat dokud nerestartujete PC.";
-                    default:
-                        throw new NotImplementedException();
-                }
-            }
-        }
-
-        public static string Reinstall
-        {
-            get
-            {
-                switch (CurrLang)
-                {
-                    case Language.English:
-                        return "Reinstall";
-                    case Language.Czech:
-                        return "Reinstalovat";
                     default:
                         throw new NotImplementedException();
                 }

@@ -10,13 +10,13 @@ namespace ClausaComm_Installer.DotnetManipulation
     public static class DotnetChecker
     {
         // Let's just hardcore it, hopefully I won't change it and forget about it...
-        public const string DemandedVersion = "5.0.0";
+        private const string DemandedVersion = "5.0.0";
 
         private static readonly int[] DemandedVersionNumbers =
             DemandedVersion.Split('.').Select(str => int.Parse(str)).ToArray();
 
-        private static readonly string DotnetPath = Path.Combine(Paths.ProgramFiles, "dotnet");
-        private static readonly string Dotnetx86Path = Path.Combine(Paths.ProgramFilesx86, "dotnet");
+        private static readonly string DotnetPath = Path.Combine(GlobalPaths.ProgramFiles, "dotnet");
+        private static readonly string Dotnetx86Path = Path.Combine(GlobalPaths.ProgramFilesx86, "dotnet");
 
         private static readonly string[] RuntimeTypes = {"Microsoft.NETCore.App", "Microsoft.WindowsDesktop.App"};
         private const string RuntimesRetrievalCommand = "dotnet --list-runtimes";

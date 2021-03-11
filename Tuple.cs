@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace ClausaComm_Installer
+﻿namespace ClausaComm_Installer
 {
     public class Tuple<T1>  
     { 

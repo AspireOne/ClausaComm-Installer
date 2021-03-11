@@ -11,22 +11,18 @@ namespace ClausaComm_Installer.DotnetManipulation
     {
         // C# 3
         // https://dotnet.microsoft.com/download/dotnet/thank-you/runtime-desktop-5.0.1-windows-x86-installer
-        public const string FriendlyDownloadLink = "https://dotnet.microsoft.com/download/dotnet/5.0";
-
-        private const string DownloadLink =
+        private static readonly string FileSavePath = Path.Combine(GlobalPaths.Temp, "ClausaComm_dotnet_installer.exe");
+        private const string FriendlyDownloadLink = "https://dotnet.microsoft.com/download/dotnet/5.0";
+        private const string DirectDownloadLink =
             "https://download.visualstudio.microsoft.com/download/pr/55bb1094-db40-411d-8a37-21186e9495ef/1a045e29541b7516527728b973f0fdef/windowsdesktop-runtime-5.0.1-win-x86.exe";
 
-        private static readonly string FileSavePath = Path.Combine(Paths.Temp, "ClausaComm_dotnet_installer.exe");
-        public static bool Downloading { get; private set; }
+        private static readonly ProcessStartInfo InstallStartInfo =
+            ConsoleUtils.GetProcessStartInfo('"' + FileSavePath + '"' + " /q /noreboot", false, true);
 
         public static bool Downloaded
         {
             get { return File.Exists(FileSavePath); }
         }
-
-        private static readonly ProcessStartInfo InstallStartInfo =
-            ConsoleUtils.GetProcessStartInfo('"' + FileSavePath + '"' + " /q /noreboot", false, true);
-
 
         public static void DownloadDotnetAsync(DownloadProgressChangedEventHandler progressUpdateCallback,
             AsyncCompletedEventHandler downloadFinishedCallback)
@@ -38,10 +34,8 @@ namespace ClausaComm_Installer.DotnetManipulation
             {
                 client.DownloadProgressChanged += progressUpdateCallback;
                 client.DownloadFileCompleted += downloadFinishedCallback;
-                client.DownloadFileCompleted += (o, e) => Downloading = false;
 
-                Downloading = true;
-                client.DownloadFileAsync(new Uri(DownloadLink), FileSavePath);
+                client.DownloadFileAsync(new Uri(DirectDownloadLink), FileSavePath);
             }
         }
 

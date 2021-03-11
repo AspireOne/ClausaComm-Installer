@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using ClausaComm_Installer.Utils;
 
 namespace ClausaComm_Installer.Forms
@@ -16,7 +15,7 @@ namespace ClausaComm_Installer.Forms
         {
             Text = LocalizedStrings.ClausaCommIsAlreadyInstalled;
             AlreadyInstalledLbl.Text = LocalizedStrings.ClausaCommIsAlreadyInstalled;
-            InstallationPathLbl.Text = LocalizedStrings.InstallationFolder + ": ";
+            InstallationPathLbl.Text = LocalizedStrings.InstallationFolder + @": ";
             InstallationPath.Text = InstallationDir.GetCurrentInstallDirOrNull();
             OpenUninstallerButton.Text = LocalizedStrings.OpenUninstallationFile;
             CloseButton.Text = LocalizedStrings.Close;

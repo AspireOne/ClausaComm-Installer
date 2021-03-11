@@ -9,7 +9,7 @@ namespace ClausaComm_Installer.Utils
             var t = new Thread(action)
             {
                 IsBackground = true,
-                Name = "ClausaComm child thread",
+                Name = "ClausaComm child thread"
             };
 
             if (sta)

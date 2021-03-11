@@ -10,14 +10,17 @@ namespace ClausaComm_Installer
     {
         // Program Files (x86) may not (or always does not, doesn't matter :D) exist on 32-bit machines, so we're checking for it's existence
         // and if it doesn't exist, we're using Program Files instead - which exists always.
-        public static readonly string DefaultInstallationDir = Directory.Exists(Paths.ProgramFilesx86) ? Paths.ProgramFilesx86 : Paths.ProgramFiles;
-        public const string DirName = Program.ClausaCommName;
+        public static readonly string DefaultInstallationDir = Directory.Exists(GlobalPaths.ProgramFilesx86)
+            ? GlobalPaths.ProgramFilesx86
+            : GlobalPaths.ProgramFiles;
+        
         private static readonly FolderBrowserDialog Dialog = new FolderBrowserDialog
         {
             Description = LocalizedStrings.SelectClausaCommInstallFolder,
             RootFolder = Environment.SpecialFolder.ProgramFiles,
-            ShowNewFolderButton = false,
+            ShowNewFolderButton = false
         };
+        public const string DirName = Program.ClausaCommName;
 
         public static string ConcatPathToProgramDir(string path)
         {
@@ -27,9 +30,7 @@ namespace ClausaComm_Installer
         public static string GetCurrentInstallDirOrNull()
         {
             using (RegistryKey key = Registry.LocalMachine.OpenSubKey(ClausaCommManipulation.ClausaCommManipulation.ClausaCommSubkeyPath))
-            {
                 return key == null ? null : key.GetValue("InstallLocation").ToString().Replace("\"", "");
-            }
         }
 
         public static void OpenSelectDirDialogAsync(Action<string> callback)

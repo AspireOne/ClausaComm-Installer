@@ -6,7 +6,11 @@ using ClausaComm_Installer.Utils;
 
 namespace ClausaComm_Installer
 {
-    public static class Paths
+    /// <summary>
+    /// Contains global paths (e.g. Program Files, System32), NOT program-specific paths (Installer
+    /// Save path, ClausaComm Start Menu shortcut path).
+    /// </summary>
+    public static class GlobalPaths
     {
         // Environment.SpecialFolder.ProgramFiles returns x86 folder if the targeted system is x86, so we're working around that.
         private const string ProgramFilesx86Addition = " (x86)";
@@ -22,11 +26,13 @@ namespace ClausaComm_Installer
 
         private static string InitProgramPath()
         {
+            // ReSharper disable once PossibleNullReferenceException | Expected
             string filename = TryAndCatchNullReference(() => Process.GetCurrentProcess().MainModule.FileName);
 
             if (filename != null)
                 return Path.Combine(Directory.GetCurrentDirectory(), filename);
 
+            // ReSharper disable once PossibleNullReferenceException | Expected
             string path = TryAndCatchNullReference(() => System.Reflection.Assembly.GetEntryAssembly().Location);
 
             if (path != null)
@@ -42,6 +48,7 @@ namespace ClausaComm_Installer
             if (File.Exists(installerGuessedPath2))
                 return installerGuessedPath2;
 
+            // ReSharper disable once ConvertIfStatementToReturnStatement | Readability
             if (File.Exists(uninstallerGuessedPath))
                 return uninstallerGuessedPath;
 
@@ -60,10 +67,12 @@ namespace ClausaComm_Installer
                 return null;
             }
         }
-
+        
+        /// <returns>Path to Program Files (x86)</returns>
         private static string InitProgramFilesx86Path()
         {
             string path = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+            // If the path is "Program Files" instead of "Program Files (x86)" add the " (x86)".
             return path.EndsWith(ProgramFilesx86Addition) ? path : path + ProgramFilesx86Addition;
         }
     }

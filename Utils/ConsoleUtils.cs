@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 
@@ -10,7 +9,7 @@ namespace ClausaComm_Installer.Utils
         //private static readonly Queue<object> QueuedMessages = new Queue<object>();
         public static bool ConsoleDisabled = false;
         private static bool LogFileDisabled = false;
-        private static readonly string LogFilePath = Path.Combine(Paths.Temp, "ClausaComm_Installation_Log.log");
+        private static readonly string LogFilePath = Path.Combine(GlobalPaths.Temp, "ClausaComm_Installation_Log.log");
         private static readonly object LogLock = new object();
 
         public static ProcessStartInfo GetProcessStartInfo(string argument, bool fromSystem32, bool admin)
@@ -22,7 +21,7 @@ namespace ClausaComm_Installer.Utils
                 CreateNoWindow = true,
                 RedirectStandardOutput = !admin,
                 FileName = "cmd.exe",
-                Arguments = "/C " + (fromSystem32 ? "cd " + Paths.System32 + " & " : "") + argument,
+                Arguments = "/C " + (fromSystem32 ? "cd " + GlobalPaths.System32 + " & " : "") + argument,
                 Verb = admin ? "runas" : ""
             };
         }

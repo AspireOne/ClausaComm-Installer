@@ -19,15 +19,15 @@ namespace ClausaComm_Installer.ClausaCommManipulation
             string installDir = InstallationDir.GetCurrentInstallDirOrNull();
 
             bool deletedSubkey = TryDoUninstallationStep(() => Registry.LocalMachine.DeleteSubKey(ClausaCommSubkeyPath));
-            ProgramShortcuts.DeletionSuccess shortcutsDeletion = ProgramShortcuts.RemoveAllShortcuts();
+            bool shortcutsDeleted = ProgramShortcuts.RemoveAllShortcuts();
 
             SetUpUninstallTimer(installDir);
 
-            ConsoleUtils.LogAsync("Uninstallation completed.\ndeleted subkey: " + deletedSubkey + "\nshortcuts deletion: " + shortcutsDeletion);
+            ConsoleUtils.LogAsync("Uninstallation completed.\ndeleted subkey: " + deletedSubkey + "\nall shortcuts deleted: " + shortcutsDeleted);
 
             completedCallback.Invoke(deletedSubkey);
         }
-
+        
         private static bool TryDoUninstallationStep(Action action)
         {
             try
@@ -42,6 +42,8 @@ namespace ClausaComm_Installer.ClausaCommManipulation
             }
         }
 
+        /// <summary>Starts a separate process which will wait for x seconds and then delete the passed dir.</summary>
+        /// <param name="installDir">The dir which will be deleted - ClausaComm's install dir.</param>
         private static void SetUpUninstallTimer(string installDir)
         {
             ConsoleUtils.RunProcess(ConsoleUtils.GetDelay(UninstallationDelaySecs) + " & rmdir /s /q \"" + installDir + '"', true, true);

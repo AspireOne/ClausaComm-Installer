@@ -97,7 +97,7 @@ namespace ClausaComm_Installer
             }
         }
 
-        public static bool CreateShortcut(string shortcutPath, string target, string description, string argument)
+        private static bool CreateShortcut(string shortcutPath, string target, string description, string argument)
         {
             IWshShortcut shortcut;
             try

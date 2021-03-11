@@ -136,7 +136,7 @@ namespace ClausaComm_Installer.Forms
                     return;   
                 }
 
-                ClausaCommInstallationProgress.Text = LocalizedStrings.CouldNotInstall + ' ' + LocalizedStrings.Error + ": " + error;
+                ClausaCommInstallationProgress.Text = LocalizedStrings.CouldNotInstall + ' ' + LocalizedStrings.Error + @": " + error;
             });
         }
 
@@ -153,7 +153,7 @@ namespace ClausaComm_Installer.Forms
             InstallationDir.OpenSelectDirDialogAsync(InstallationDirChosenCallback);
         }
 
-        public void InstallationDirChosenCallback(string path)
+        private void InstallationDirChosenCallback(string path)
         {
             if (!string.IsNullOrEmpty(path) && Directory.Exists(path))
                 InvokeOnMainThread(() => InstallationPathTextbox.Text = path);
@@ -163,7 +163,7 @@ namespace ClausaComm_Installer.Forms
         {
             //TODO: Try switch admin on
             if (RemoveInstallerCheckbox.Checked)
-                ConsoleUtils.RunProcess(ConsoleUtils.GetDelay(1) + " & del /f /q \"" + Paths.ThisProgram + '"', true, false);
+                ConsoleUtils.RunProcess(ConsoleUtils.GetDelay(1) + " & del /f /q \"" + GlobalPaths.ThisProgram + '"', true, false);
             Program.Terminate();
         }
 

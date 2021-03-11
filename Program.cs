@@ -1,11 +1,5 @@
 ﻿using System;
-using System.Diagnostics;
-using System.Globalization;
-using System.IO;
-using System.Net;
-using System.Reflection;
 using System.Security.Principal;
-using System.Threading;
 using System.Windows.Forms;
 using System.Linq;
 using ClausaComm_Installer.ClausaCommManipulation;
@@ -19,6 +13,7 @@ namespace ClausaComm_Installer
         public const string ClausaCommName = "ClausaComm";
         public const string ClausaCommExeName = ClausaCommName + ".exe";
         public const string ProgramDescription = "ClausaComm - a LAN chatting app.";
+        public const string UninstallerDescription = "ClausaComm Uninstaller";
         public static readonly bool AlreadyInstalled = ClausaCommInstallation.IsInstalled();
 
         /// <summary>
@@ -29,7 +24,6 @@ namespace ClausaComm_Installer
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-
             Form formToRun;
 
             if (AlreadyInstalled)
@@ -50,7 +44,6 @@ namespace ClausaComm_Installer
 
         public static void Terminate()
         {
-
             Application.Exit();
             Environment.Exit(0);
         }

@@ -101,7 +101,7 @@
     <Compile Include="Forms\NotAnAdminForm.Designer.cs">
       <DependentUpon>NotAnAdminForm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Paths.cs" />
+    <Compile Include="GlobalPaths.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="ProgramShortcuts.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
