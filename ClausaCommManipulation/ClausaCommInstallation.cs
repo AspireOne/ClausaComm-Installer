@@ -11,8 +11,7 @@ namespace ClausaComm_Installer.ClausaCommManipulation
 {
     public class ClausaCommInstallation : ClausaCommManipulation
     {
-        private static readonly string BinariesZipPath = Path.Combine(Paths.Temp, "ClausaComm_Binaries.zip");
-
+        private static readonly string BinariesZipPath = Path.Combine(GlobalPaths.Temp, "ClausaComm_Binaries.zip");
         private readonly string InstallDir;
         private readonly string ClausaCommExePath;
         private readonly string UninstallerExePath;
@@ -37,13 +36,13 @@ namespace ClausaComm_Installer.ClausaCommManipulation
 
         private void PerformInstallationAsync(Action<string> finishedCallback)
         {
-             string[] extractedFilesFromBinary = { };
             /*
              * Action: Installation step
              * Action: The reverse action of the step (e.g. 'create a file' -> delete a file)
              * String: A friendly error string.
              */
-            var installationSteps = new Tuple<Action, Action, string>[]
+            string[] extractedFilesFromBinary = { };
+            var installationSteps = new[]
             {
                 new Tuple<Action, Action, string>(
                     () => ExtractBinaries(out extractedFilesFromBinary),
@@ -51,7 +50,7 @@ namespace ClausaComm_Installer.ClausaCommManipulation
                     LocalizedStrings.CouldNotExtractBinaries),
 
                 new Tuple<Action, Action, string>(
-                    () => File.Copy(Paths.ThisProgram, UninstallerExePath, true),
+                    () => File.Copy(GlobalPaths.ThisProgram, UninstallerExePath, true),
                     () => File.Delete(UninstallerExePath),
                     LocalizedStrings.CouldNotCopyInstallerToInstallationDir),
 
@@ -59,7 +58,7 @@ namespace ClausaComm_Installer.ClausaCommManipulation
                     AddRegistryValues,
                     () => Registry.LocalMachine.DeleteSubKeyTree(ClausaCommSubkeyPath),
                     LocalizedStrings.CouldNotAddValuesToRegistry),
-
+                
                 new Tuple<Action, Action, string>(
                     () => ProgramShortcuts.AddShortcutsToStartMenu(ClausaCommExePath, UninstallerExePath),
                     ProgramShortcuts.RemoveShortcutsFromStartMenu,
@@ -76,10 +75,7 @@ namespace ClausaComm_Installer.ClausaCommManipulation
             for (int instIndex = 0; instIndex < installationSteps.Length; ++instIndex)
             {
                 if (TryDoInstallationStep(installationSteps[instIndex].Item1))
-                {
-                    ConsoleUtils.LogAsync("Installation step " + instIndex + " performed.");
                     continue;
-                }
 
                 // Notes the error of the installation step that threw the error and starts reverting the steps from currIndex - 1.
                 error = installationSteps[instIndex].Item3;
@@ -94,12 +90,7 @@ namespace ClausaComm_Installer.ClausaCommManipulation
                 break;
             }
 
-            Finish(error, finishedCallback);
-        }
-
-        private static void Finish(string friendlyErrorMsg, Action<string> finishedCallback)
-        {
-            finishedCallback.Invoke(friendlyErrorMsg);
+            finishedCallback.Invoke(error);
         }
 
         private static bool TryDoInstallationStep(Action step)
