@@ -9,7 +9,10 @@ namespace ClausaComm_Installer
 {
     public static class ProgramShortcuts
     {
+        private static readonly WshShell Shell = new WshShell();
         private const string Extension = ".lnk";
+
+        #region Path initialization
 
         public static readonly string ProgramStartMenuDir =
             Path.Combine(GlobalPaths.StartMenuDir, Program.ClausaCommName);
@@ -23,33 +26,25 @@ namespace ClausaComm_Installer
         public static readonly string UninstallerStartMenuShortcut =
             Path.Combine(ProgramStartMenuDir, "Uninstall " + Program.ClausaCommName + Extension);
 
-        private static readonly WshShell Shell = new WshShell();
+        #endregion
 
         public static bool AddShortcutsToStartMenu(string programPath, string uninstallerPath)
         {
             if (Directory.Exists(ProgramStartMenuDir))
-            {
-                try
-                {
-                    Directory.Delete(ProgramStartMenuDir, true);
-                }
-                catch (Exception e)
-                {
-                    // Ignored.
-                    ConsoleUtils.LogAsync("Could not delete program start menu dir. Exception: " + e);
-                }
-            }
+                // Error ignored - the deletion may not be necesarry.
+                TryDelete(() => Directory.Delete(ProgramStartMenuDir, true));
 
+            // If the previous dir deletion failed, this method will simply return the already existing dir.
             Directory.CreateDirectory(ProgramStartMenuDir);
-
+                
             bool programCreated =
                 CreateShortcut(ProgramStartMenuShortcut, programPath, Program.ProgramDescription, null);
-            
+
             bool uninstallerCreated = CreateShortcut(UninstallerStartMenuShortcut, uninstallerPath,
                 Program.UninstallerDescription, ClausaCommUninstallation.UninstallArgument);
 
             if (!(programCreated && uninstallerCreated))
-                ConsoleUtils.LogAsync("Could not create program or installer start menu shortcut");
+                ConsoleUtils.LogAsync("Could not create program or installer start menu shortcut.");
 
             return programCreated && uninstallerCreated;
         }
@@ -108,7 +103,8 @@ namespace ClausaComm_Installer
             try
             {
                 shortcut = Shell.CreateShortcut(shortcutPath) as IWshShortcut;
-                shortcut.TargetPath = target;
+                if (shortcut == null)
+                    throw new NullReferenceException();
             }
             catch (Exception e)
             {
@@ -116,11 +112,9 @@ namespace ClausaComm_Installer
                 return false;
             }
 
-            if (description != null)
-                shortcut.Description = description;
-
-            if (argument != null)
-                shortcut.Arguments += argument;
+            shortcut.TargetPath = target;
+            if (description != null) shortcut.Description = description;
+            if (argument != null) shortcut.Arguments += argument;
 
             try
             {
