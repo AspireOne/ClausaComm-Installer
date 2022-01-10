@@ -42,7 +42,7 @@ namespace ClausaComm_Installer.Utils
             ThreadUtils.RunThread(() =>
             {
                 string text = textObj.ToString();
-                //Debug.WriteLine(text);
+                Debug.WriteLine(text);
 
                 if (!ConsoleDisabled)
                 {
