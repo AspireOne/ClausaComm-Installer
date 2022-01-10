@@ -106,7 +106,7 @@ namespace ClausaComm_Installer
                     case Language.English:
                         return "Please restart the installer as admin.";
                     case Language.Czech:
-                        return "Restartujte, prosím, instalační program jako administrátor.";
+                        return "Restartujte prosím instalační program jako administrátor.";
                     default:
                         throw new NotImplementedException();
                 }
@@ -170,7 +170,7 @@ namespace ClausaComm_Installer
                     case Language.English:
                         return "ClausaComm is already installed.";
                     case Language.Czech:
-                        return "ClausaComm je už nainstalován.";
+                        return "ClausaComm už je nainstalován.";
                     default:
                         throw new NotImplementedException();
                 }
@@ -218,7 +218,7 @@ namespace ClausaComm_Installer
                     case Language.English:
                         return "Could not add shortcuts to start menu.";
                     case Language.Czech:
-                        return "Nepovedlo se přidat zástupce do start menu.";
+                        return "Nepovedlo se přidat zástupce do nabídky start.";
                     default:
                         throw new NotImplementedException();
                 }
@@ -266,7 +266,7 @@ namespace ClausaComm_Installer
                     case Language.English:
                         return "You can also install it manually.";
                     case Language.Czech:
-                        return "Můžete to také nainstalovat manuálně.";
+                        return "Můžete ho také nainstalovat manuálně.";
                     default:
                         throw new NotImplementedException();
                 }
@@ -282,7 +282,7 @@ namespace ClausaComm_Installer
                     case Language.English:
                         return "Select ClausaComm installation folder";
                     case Language.Czech:
-                        return "Vyberte složku, kde bude nainstalován ClausaComm";
+                        return "Vyberte složku, do které bude ClausaComm nainstalován";
                     default:
                         throw new NotImplementedException();
                 }
@@ -377,9 +377,9 @@ namespace ClausaComm_Installer
                 switch (CurrLang)
                 {
                     case Language.English:
-                        return ".NET 5 is not installed. Do you want to download and install it now?";
+                        return ".NET is not installed. Do you want to download and install it now?";
                     case Language.Czech:
-                        return ".NET 5 není nainstalován. Chcete ho stáhnout a nainstalovat teď?";
+                        return ".NET není nainstalován. Chcete ho stáhnout a nainstalovat teď?";
                     default:
                         throw new NotImplementedException();
                 }
@@ -457,7 +457,7 @@ namespace ClausaComm_Installer
                 switch (CurrLang)
                 {
                     case Language.English:
-                        return "Could not install.";
+                        return "Installation unsuccesfull.";
                     case Language.Czech:
                         return "Instalace neúspěšná.";
                     default:
@@ -491,7 +491,7 @@ namespace ClausaComm_Installer
                     case Language.English:
                         return ".NET Installed! ClausaComm may not be able to start until you restart your PC.";
                     case Language.Czech:
-                        return ".NET naistalován! ClausaComm možná nebude moci fungovat dokud nerestartujete PC.";
+                        return ".NET naistalován! ClausaComm možná nebude možno zapnout dokud nerestartujete PC.";
                     default:
                         throw new NotImplementedException();
                 }
