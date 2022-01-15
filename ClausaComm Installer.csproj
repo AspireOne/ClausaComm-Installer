@@ -147,7 +147,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\binaries.zip" />
     <None Include="Resources\installer_icon.ico" />
   </ItemGroup>
   <ItemGroup>
@@ -162,7 +161,9 @@
       <Private>True</Private>
     </COMReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Resources\binaries.zip" />
+  </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
       <Visible>False</Visible>
