@@ -12,9 +12,9 @@ namespace ClausaComm_Installer.DotnetManipulation
         // C# 3
         // https://dotnet.microsoft.com/download/dotnet/thank-you/runtime-desktop-5.0.1-windows-x86-installer
         private static readonly string FileSavePath = Path.Combine(GlobalPaths.Temp, "ClausaComm_dotnet_installer.exe");
-        private const string FriendlyDownloadLink = "https://dotnet.microsoft.com/download/dotnet/5.0";
-        private const string DirectDownloadLink =
-            "https://download.visualstudio.microsoft.com/download/pr/55bb1094-db40-411d-8a37-21186e9495ef/1a045e29541b7516527728b973f0fdef/windowsdesktop-runtime-5.0.1-win-x86.exe";
+        private const string FriendlyDownloadLink = "https://dotnet.microsoft.com/en-us/download/dotnet/6.0/runtime";
+        private const string DownloadLink32 = "https://download.visualstudio.microsoft.com/download/pr/7977218c-1a01-4b69-a8ec-9d9311a6de5b/4c74f995295be78a9ebe1d5fede8f7f3/windowsdesktop-runtime-6.0.1-win-x86.exe";
+        private const string DownloadLink64 = "https://download.visualstudio.microsoft.com/download/pr/bf058765-6f71-4971-aee1-15229d8bfb3e/c3366e6b74bec066487cd643f915274d/windowsdesktop-runtime-6.0.1-win-x64.exe";
 
         private static readonly ProcessStartInfo InstallStartInfo =
             ConsoleUtils.GetProcessStartInfo('"' + FileSavePath + '"' + " /q /noreboot", false, true);
@@ -24,8 +24,7 @@ namespace ClausaComm_Installer.DotnetManipulation
             get { return File.Exists(FileSavePath); }
         }
 
-        public static void DownloadDotnetAsync(DownloadProgressChangedEventHandler progressUpdateCallback,
-            AsyncCompletedEventHandler downloadFinishedCallback)
+        public static void DownloadDotnetAsync(DownloadProgressChangedEventHandler progressUpdateCallback, AsyncCompletedEventHandler downloadFinishedCallback)
         {
             if (Downloaded)
                 downloadFinishedCallback.Invoke(null, new AsyncCompletedEventArgs(null, true, null));
@@ -35,7 +34,7 @@ namespace ClausaComm_Installer.DotnetManipulation
                 client.DownloadProgressChanged += progressUpdateCallback;
                 client.DownloadFileCompleted += downloadFinishedCallback;
 
-                client.DownloadFileAsync(new Uri(DirectDownloadLink), FileSavePath);
+                client.DownloadFileAsync(new Uri(Environment.Is64BitProcess ? DownloadLink64 : DownloadLink32), FileSavePath);
             }
         }
 
