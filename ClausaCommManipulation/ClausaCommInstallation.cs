@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using ClausaComm_Installer.Properties;
@@ -26,7 +27,15 @@ namespace ClausaComm_Installer.ClausaCommManipulation
         public static bool IsInstalled()
         {
             using (RegistryKey key = Registry.LocalMachine.OpenSubKey(ClausaCommSubkeyPath))
-                return key != null;
+            {
+                if (key == null || Directory.Exists(InstallationDir.GetCurrentInstallDirOrNull()))
+                    return key != null;
+                
+                ConsoleUtils.LogAsync("Registry value exists but the actual program directory doesn't. Deleting registry value.");
+                TryDoInstallationStep(() => Registry.LocalMachine.DeleteSubKey(ClausaCommSubkeyPath));
+                return false;
+
+            }
         }
 
         public void InstallAsync(Action<string> finishedCallback)
