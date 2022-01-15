@@ -147,7 +147,7 @@ namespace ClausaComm_Installer.Forms
             this.ResetPathButton.Name = "ResetPathButton";
             this.ResetPathButton.Size = new System.Drawing.Size(61, 24);
             this.ResetPathButton.TabIndex = 10;
-            this.ResetPathButton.Text = "{reset}";
+            this.ResetPathButton.Text = "reset";
             this.ResetPathButton.UseVisualStyleBackColor = true;
             this.ResetPathButton.Visible = false;
             this.ResetPathButton.Click += new System.EventHandler(this.ResetPathButton_Click);
