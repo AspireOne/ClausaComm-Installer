@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
 using ClausaComm_Installer.Utils;
 
 namespace ClausaComm_Installer.DotnetManipulation
@@ -11,74 +13,41 @@ namespace ClausaComm_Installer.DotnetManipulation
     {
         // Let's just hardcore it, hopefully I won't change it and forget about it...
         private const string DemandedVersion = "5.0.0";
+        private const string VersionPattern = @"[0-9]\.[0-9]\.[0-9]+";
 
-        private static readonly int[] DemandedVersionNumbers =
-            DemandedVersion.Split('.').Select(str => int.Parse(str)).ToArray();
-
-        private static readonly string DotnetPath = Path.Combine(GlobalPaths.ProgramFiles, "dotnet");
-        private static readonly string Dotnetx86Path = Path.Combine(GlobalPaths.ProgramFilesx86, "dotnet");
-
-        private static readonly string[] RuntimeTypes = {"Microsoft.NETCore.App", "Microsoft.WindowsDesktop.App"};
-        private const string RuntimesRetrievalCommand = "dotnet --list-runtimes";
-
-        private static readonly ProcessStartInfo ListRuntimesStartInfo =
-            ConsoleUtils.GetProcessStartInfo(RuntimesRetrievalCommand, false, false);
-
+        private static readonly int[] DemandedVersionNumbers = DemandedVersion.Split('.').Select(str => int.Parse(str)).ToArray();
 
         public static bool IsDotnetInstalled()
         {
-            return GetInstalledRuntimes().Select(runtime => runtime.Split(' ')[1]).Any(IsVersionSupported);
+            return GetInstalledRuntimesVersions().Any(IsVersionSupported);
         }
 
-        private static IEnumerable<string> GetInstalledRuntimes()
+        private static IEnumerable<string> GetInstalledRuntimesVersions()
         {
-            string output = "";
-            int method = 0;
-            while (true)
+            var p = new Process { StartInfo = ConsoleUtils.GetProcessStartInfo("dotnet --info", false, false) };
+            p.Start();
+            p.WaitForExit();
+            while (p.StandardOutput.Peek() != -1)
             {
-                var p = new Process {StartInfo = ListRuntimesStartInfo};
-                switch (method)
-                {
-                    case 0:
-                        break;
-                    case 1:
-                        p.StartInfo.Arguments = "/C cd " + '"' + DotnetPath + '"' + " & " + RuntimesRetrievalCommand;
-                        break;
-                    case 2:
-                        p.StartInfo.Arguments = "/C cd " + '"' + Dotnetx86Path + '"' + " & " + RuntimesRetrievalCommand;
-                        break;
-                }
-
-                try
-                {
-                    p.Start();
-                    output += "\n" + p.StandardOutput.ReadToEnd().Trim();
-                    p.WaitForExit();
-                }
-                catch (Exception e)
-                {
-                    ConsoleUtils.LogAsync(e);
-                    // Ignored.
-                }
-
-                if (method != 2)
-                    ++method;
-                else
-                    break;
+                string line = p.StandardOutput.ReadLine();
+                Match versionMatch = Regex.Match(line, VersionPattern);
+                if (!line.Contains("Microsoft.AspNetCore.App") && line.Contains("OS Version") && versionMatch.Success)
+                    yield return versionMatch.Value;
             }
-
-            return output == string.Empty
-                ? new string[] { }
-                : output.Split('\n').Where(line => RuntimeTypes.Any(line.StartsWith)).ToArray();
+            p.Close();
         }
 
         private static bool IsVersionSupported(string version)
         {
-            byte[] numbers = version.Split('.').Select(str => byte.Parse(str)).ToArray();
+            byte[] numbers = version.Split('.').Select(str => byte.Parse(str.Substring(0, 1))).ToArray();
 
-            return numbers[0] > DemandedVersionNumbers[0]
+            return numbers[0] > DemandedVersionNumbers[0] 
+                   || numbers[0] == DemandedVersionNumbers[0] && numbers[1] >= DemandedVersionNumbers[1];
+            // Not checking the patch version because it's backwards-compatible.
+            
+            /*return numbers[0] > DemandedVersionNumbers[0]
                    || numbers[0] == DemandedVersionNumbers[0] && numbers[1] > DemandedVersionNumbers[1]
-                   || numbers[0] == DemandedVersionNumbers[0] && numbers[1] == DemandedVersionNumbers[1] && numbers[2] >= DemandedVersionNumbers[2];
+                   || numbers[0] == DemandedVersionNumbers[0] && numbers[1] == DemandedVersionNumbers[1] && numbers[2] >= DemandedVersionNumbers[2];*/
         }
     }
 }
