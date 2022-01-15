@@ -31,7 +31,7 @@ namespace ClausaComm_Installer.DotnetManipulation
             {
                 string line = p.StandardOutput.ReadLine();
                 Match versionMatch = Regex.Match(line, VersionPattern);
-                if (!line.Contains("Microsoft.AspNetCore.App") && line.Contains("OS Version") && versionMatch.Success)
+                if (!line.Contains("Microsoft.AspNetCore.App") && !line.Contains("OS Version") && versionMatch.Success)
                     yield return versionMatch.Value;
             }
             p.Close();
