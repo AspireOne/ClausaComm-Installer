@@ -37,30 +37,24 @@ namespace ClausaComm_Installer.Utils
         }
 
 
-        public static void LogAsync(object textObj)
+        public static void Log(object textObj)
         {
-            ThreadUtils.RunThread(() =>
+            string text = textObj.ToString();
+            Debug.WriteLine(text);
+
+            if (!ConsoleDisabled)
             {
-                string text = textObj.ToString();
-                Debug.WriteLine(text);
-
-                if (!ConsoleDisabled)
-                {
-                    bool written = TryAndCatchAny(() => Console.WriteLine(text));
-                    if (!written)
-                        ConsoleDisabled = true;
-                }
-
-                if (!LogFileDisabled)
-                {
-                    lock (LogLock)
-                    {
-                        bool logged = TryAndCatchAny(() => File.AppendAllText(LogFilePath, text + '\n'));
-                        if (!logged)
-                            LogFileDisabled = true;
-                    }
-                }
-            }, false);
+                bool written = TryAndCatchAny(() => Console.WriteLine(text));
+                if (!written)
+                    ConsoleDisabled = true;
+            }
+            
+            lock (LogLock)
+            {
+                bool logged = TryAndCatchAny(() => File.AppendAllText(LogFilePath, text + '\n'));
+                if (!logged)
+                    LogFileDisabled = true;
+            }
         }
 
         private static bool TryAndCatchAny(Action action)
