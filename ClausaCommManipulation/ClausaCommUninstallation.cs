@@ -23,7 +23,7 @@ namespace ClausaComm_Installer.ClausaCommManipulation
 
             SetUpUninstallTimer(installDir);
 
-            ConsoleUtils.LogAsync("Uninstallation completed.\ndeleted subkey: " + deletedSubkey + "\nall shortcuts deleted: " + shortcutsDeleted);
+            ConsoleUtils.Log("Uninstallation completed.\ndeleted subkey: " + deletedSubkey + "\nall shortcuts deleted: " + shortcutsDeleted);
 
             completedCallback.Invoke(deletedSubkey);
         }
@@ -37,7 +37,7 @@ namespace ClausaComm_Installer.ClausaCommManipulation
             }
             catch (Exception e)
             {
-                ConsoleUtils.LogAsync("Uninstallation step error: " + e);
+                ConsoleUtils.Log("Uninstallation step error: " + e);
                 return false;
             }
         }

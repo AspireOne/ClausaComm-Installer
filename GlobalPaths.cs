@@ -63,7 +63,7 @@ namespace ClausaComm_Installer
             }
             catch (NullReferenceException e)
             {
-                ConsoleUtils.LogAsync(e);
+                ConsoleUtils.Log(e);
                 return null;
             }
         }

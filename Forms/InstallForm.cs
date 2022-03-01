@@ -17,7 +17,7 @@ namespace ClausaComm_Installer.Forms
             InitializeComponent();
             InitComponentsText();
 
-            // If .NET 5 is not installed (dotnet not installed panel is visible), disable Install button and vice versa.
+            // If .NET 6 is not installed (dotnet not installed panel is visible), disable Install button and vice versa.
             DotnetNotInstalledPanel.VisibleChanged += (o, e) => InstallButton.Enabled = !DotnetNotInstalledPanel.Visible;
             DotnetNotInstalledPanel.Visible = !DotnetChecker.IsDotnetInstalled();
             InstallationPathTextbox.Text = InstallationDir.DefaultInstallationDir;
@@ -45,7 +45,7 @@ namespace ClausaComm_Installer.Forms
 
         private void DotnetDownloadFinishedCallback(object _, AsyncCompletedEventArgs e)
         {
-            ConsoleUtils.LogAsync(".NET download finished. Cancelled: " + e.Cancelled + " | Error: " + e.Error);
+            ConsoleUtils.Log(".NET download finished. Cancelled: " + e.Cancelled + " | Error: " + e.Error);
 
             if (e.Error != null || e.Cancelled)
             {

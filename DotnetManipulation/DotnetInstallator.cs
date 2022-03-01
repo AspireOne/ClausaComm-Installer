@@ -64,7 +64,7 @@ namespace ClausaComm_Installer.DotnetManipulation
                 }
                 catch (Exception e)
                 {
-                    ConsoleUtils.LogAsync(e);
+                    ConsoleUtils.Log(e);
                     success = false;
                 }
 

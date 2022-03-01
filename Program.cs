@@ -38,7 +38,7 @@ namespace ClausaComm_Installer
             else
                 formToRun = new InstallForm();
 
-            ConsoleUtils.LogAsync("____________________\nProgram started [" + DateTime.Now + "]\nForm to run: " + formToRun.GetType());
+            ConsoleUtils.Log("____________________\nProgram started [" + DateTime.Now + "]\nForm to run: " + formToRun.GetType());
             Application.Run(formToRun);
         }
 

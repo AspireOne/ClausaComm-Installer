@@ -31,7 +31,7 @@ namespace ClausaComm_Installer.ClausaCommManipulation
                 if (key == null || Directory.Exists(InstallationDir.GetCurrentInstallDirOrNull()))
                     return key != null;
                 
-                ConsoleUtils.LogAsync("Registry value exists but the actual program directory doesn't. Deleting registry value.");
+                ConsoleUtils.Log("Registry value exists but the actual program directory doesn't. Deleting registry value.");
                 TryDoInstallationStep(() => Registry.LocalMachine.DeleteSubKey(ClausaCommSubkeyPath));
                 return false;
 
@@ -88,12 +88,12 @@ namespace ClausaComm_Installer.ClausaCommManipulation
 
                 // Notes the error of the installation step that threw the error and starts reverting the steps from currIndex - 1.
                 error = installationSteps[instIndex].Item3;
-                ConsoleUtils.LogAsync("Installation step " + instIndex + " failed. Friendly error msg: " + error);
+                ConsoleUtils.Log("Installation step " + instIndex + " failed. Friendly error msg: " + error);
 
                 for (int uninstIndex = instIndex/* - 1*/; uninstIndex >= 0; --uninstIndex)
                 {
                     bool success = TryDoInstallationStep(installationSteps[uninstIndex].Item2);
-                    ConsoleUtils.LogAsync("Revertion of step " + uninstIndex + " performed | succesfull: " + success);
+                    ConsoleUtils.Log("Revertion of step " + uninstIndex + " performed | succesfull: " + success);
                 }
 
                 break;
@@ -111,7 +111,7 @@ namespace ClausaComm_Installer.ClausaCommManipulation
             }
             catch (Exception e)
             {
-                ConsoleUtils.LogAsync("(Un)installation step error: " + e);
+                ConsoleUtils.Log("(Un)installation step error: " + e);
                 return false;
             }
         }

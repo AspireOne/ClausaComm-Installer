@@ -44,7 +44,7 @@ namespace ClausaComm_Installer
                 Program.UninstallerDescription, ClausaCommUninstallation.UninstallArgument);
 
             if (!(programCreated && uninstallerCreated))
-                ConsoleUtils.LogAsync("Could not create program or installer start menu shortcut.");
+                ConsoleUtils.Log("Could not create program or installer start menu shortcut.");
 
             return programCreated && uninstallerCreated;
         }
@@ -63,7 +63,7 @@ namespace ClausaComm_Installer
         {
             bool success = CreateShortcut(ProgramDesktopShortcut, programPath, Program.ProgramDescription, null);
             if (!success)
-                ConsoleUtils.LogAsync("Could not create program shortcut on desktop.");
+                ConsoleUtils.Log("Could not create program shortcut on desktop.");
 
             return success;
         }
@@ -77,7 +77,7 @@ namespace ClausaComm_Installer
 
             bool deletedDesktopShortcut = TryDelete(RemoveProgramShortcutFromDesktop);
 
-            ConsoleUtils.LogAsync("Result of shortcuts deletion:\n program start menu dir deleted: " +
+            ConsoleUtils.Log("Result of shortcuts deletion:\n program start menu dir deleted: " +
                                   deletedStartMenuDir + "\nDesktop shortcut deleted: " + deletedDesktopShortcut);
 
             return deletedStartMenuDir && deletedDesktopShortcut;
@@ -92,7 +92,7 @@ namespace ClausaComm_Installer
             }
             catch (Exception e)
             {
-                ConsoleUtils.LogAsync("Could not perform a delete action. Exception: " + e);
+                ConsoleUtils.Log("Could not perform a delete action. Exception: " + e);
                 return false;
             }
         }
@@ -108,7 +108,7 @@ namespace ClausaComm_Installer
             }
             catch (Exception e)
             {
-                ConsoleUtils.LogAsync("Could not instantiate " + typeof(IWshShortcut) + ". Exception: " + e);
+                ConsoleUtils.Log("Could not instantiate " + typeof(IWshShortcut) + ". Exception: " + e);
                 return false;
             }
 
@@ -122,7 +122,7 @@ namespace ClausaComm_Installer
             }
             catch (Exception e)
             {
-                ConsoleUtils.LogAsync("Could not save shortcut. Exception: " + e);
+                ConsoleUtils.Log("Could not save shortcut. Exception: " + e);
                 return false;
             }
 
