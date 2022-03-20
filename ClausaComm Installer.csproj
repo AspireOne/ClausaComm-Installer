@@ -9,7 +9,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>ClausaComm_Installer</RootNamespace>
     <AssemblyName>ClausaComm Installer</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <LangVersion>3</LangVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
