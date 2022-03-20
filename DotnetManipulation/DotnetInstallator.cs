@@ -12,9 +12,9 @@ namespace ClausaComm_Installer.DotnetManipulation
         // C# 3
         // https://dotnet.microsoft.com/download/dotnet/thank-you/runtime-desktop-5.0.1-windows-x86-installer
         private static readonly string FileSavePath = Path.Combine(GlobalPaths.Temp, "ClausaComm_dotnet_installer.exe");
-        private const string FriendlyDownloadLink = "https://dotnet.microsoft.com/en-us/download/dotnet/6.0/runtime";
-        private const string DownloadLink32 = "https://download.visualstudio.microsoft.com/download/pr/7977218c-1a01-4b69-a8ec-9d9311a6de5b/4c74f995295be78a9ebe1d5fede8f7f3/windowsdesktop-runtime-6.0.1-win-x86.exe";
-        private const string DownloadLink64 = "https://download.visualstudio.microsoft.com/download/pr/bf058765-6f71-4971-aee1-15229d8bfb3e/c3366e6b74bec066487cd643f915274d/windowsdesktop-runtime-6.0.1-win-x64.exe";
+        private const string FriendlyDownloadLink = "https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-desktop-6.0.2-windows-x86-installer";
+        private const string DownloadLink32 = "https://download.visualstudio.microsoft.com/download/pr/72ebbe8e-5175-41da-9046-1890732e0d5a/675ce08d0c1740142305d35692a8685b/windowsdesktop-runtime-6.0.2-win-x86.exe";
+        private const string DownloadLink64 = "https://download.visualstudio.microsoft.com/download/pr/efa32b7a-6eec-4d97-9cdc-c7336a29a749/3df4296170397cf60884dae1be3d103b/windowsdesktop-runtime-6.0.2-win-x64.exe";
 
         private static readonly ProcessStartInfo InstallStartInfo =
             ConsoleUtils.GetProcessStartInfo('"' + FileSavePath + '"' + " /q /noreboot", false, true);
@@ -34,8 +34,13 @@ namespace ClausaComm_Installer.DotnetManipulation
                 client.DownloadProgressChanged += progressUpdateCallback;
                 client.DownloadFileCompleted += downloadFinishedCallback;
 
-                client.DownloadFileAsync(new Uri(Environment.Is64BitProcess ? DownloadLink64 : DownloadLink32), FileSavePath);
+                client.DownloadFileAsync(new Uri(Wow.Is64BitOperatingSystem ? DownloadLink64 : DownloadLink32), FileSavePath);
             }
+        }
+
+        private static void Is64Bit()
+        {
+            
         }
 
         public static void DeleteDotnetInstallatorFile()

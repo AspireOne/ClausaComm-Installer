@@ -6,7 +6,7 @@ namespace ClausaComm_Installer.ClausaCommManipulation
 {
     public class ClausaCommUninstallation : ClausaCommManipulation
     {
-        private const int UninstallationDelaySecs = 10;
+        private const int UninstallationDelaySecs = 2;
         public const string UninstallArgument = "/u";
         public const string UninstallerExeName = "uninstaller.exe";
 

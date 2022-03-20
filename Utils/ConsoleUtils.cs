@@ -7,8 +7,8 @@ namespace ClausaComm_Installer.Utils
     public static class ConsoleUtils
     {
         //private static readonly Queue<object> QueuedMessages = new Queue<object>();
-        public static bool ConsoleDisabled = false;
-        private static bool LogFileDisabled = false;
+        public static bool ConsoleDisabled;
+        private static bool LogFileDisabled;
         private static readonly string LogFilePath = Path.Combine(GlobalPaths.Temp, "ClausaComm_Installation_Log.log");
         private static readonly object LogLock = new object();
 
@@ -44,15 +44,16 @@ namespace ClausaComm_Installer.Utils
 
             if (!ConsoleDisabled)
             {
-                bool written = TryAndCatchAny(() => Console.WriteLine(text));
-                if (!written)
+                if (!TryAndCatchAny(() => Console.WriteLine(text)))
                     ConsoleDisabled = true;
             }
             
+            if (LogFileDisabled)
+                return;
+            
             lock (LogLock)
             {
-                bool logged = TryAndCatchAny(() => File.AppendAllText(LogFilePath, text + '\n'));
-                if (!logged)
+                if (!TryAndCatchAny(() => File.AppendAllText(LogFilePath, text + '\n')))
                     LogFileDisabled = true;
             }
         }

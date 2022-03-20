@@ -12,7 +12,7 @@ namespace ClausaComm_Installer.DotnetManipulation
     public static class DotnetChecker
     {
         // Let's just hardcore it, hopefully I won't change it and forget about it...
-        private const string DemandedVersion = "5.0.0";
+        private const string DemandedVersion = "6.0.0";
         private const string VersionPattern = @"[0-9]\.[0-9]\.[0-9]+";
 
         private static readonly int[] DemandedVersionNumbers = DemandedVersion.Split('.').Select(str => int.Parse(str)).ToArray();

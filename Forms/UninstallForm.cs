@@ -42,7 +42,7 @@ namespace ClausaComm_Installer.Forms
                 progressText = LocalizedStrings.SuccesfullyUninstalledTheProgramWillNowClose;
                 ThreadUtils.RunThread(() =>
                 {
-                    Thread.Sleep(2000);
+                    Thread.Sleep(1000);
                     Program.Terminate();
                 }, true);
             }
