@@ -10,7 +10,6 @@ namespace ClausaComm_Installer.DotnetManipulation
     public static class DotnetInstallator
     {
         // C# 3
-        // https://dotnet.microsoft.com/download/dotnet/thank-you/runtime-desktop-5.0.1-windows-x86-installer
         private static readonly string FileSavePath = Path.Combine(GlobalPaths.Temp, "ClausaComm_dotnet_installer.exe");
         private const string FriendlyDownloadLink = "https://dotnet.microsoft.com/en-us/download/dotnet/thank-you/runtime-desktop-6.0.2-windows-x86-installer";
         private const string DownloadLink32 = "https://download.visualstudio.microsoft.com/download/pr/72ebbe8e-5175-41da-9046-1890732e0d5a/675ce08d0c1740142305d35692a8685b/windowsdesktop-runtime-6.0.2-win-x86.exe";
@@ -34,13 +33,8 @@ namespace ClausaComm_Installer.DotnetManipulation
                 client.DownloadProgressChanged += progressUpdateCallback;
                 client.DownloadFileCompleted += downloadFinishedCallback;
 
-                client.DownloadFileAsync(new Uri(Wow.Is64BitOperatingSystem ? DownloadLink64 : DownloadLink32), FileSavePath);
+                client.DownloadFileAsync(new Uri(Environment.Is64BitOperatingSystem ? DownloadLink64 : DownloadLink32), FileSavePath);
             }
-        }
-
-        private static void Is64Bit()
-        {
-            
         }
 
         public static void DeleteDotnetInstallatorFile()
