@@ -13,6 +13,9 @@ namespace ClausaComm_Installer
         public static readonly string DefaultInstallationDir = Directory.Exists(GlobalPaths.ProgramFilesx86)
             ? GlobalPaths.ProgramFilesx86
             : GlobalPaths.ProgramFiles;
+
+        public static readonly string NonAdminInstallationDir = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        public const string DirName = Program.Name;
         
         private static readonly FolderBrowserDialog Dialog = new FolderBrowserDialog
         {
@@ -20,7 +23,6 @@ namespace ClausaComm_Installer
             RootFolder = Environment.SpecialFolder.ProgramFiles,
             ShowNewFolderButton = false
         };
-        public const string DirName = Program.ClausaCommName;
 
         public static string ConcatPathToProgramDir(string path)
         {
@@ -29,7 +31,7 @@ namespace ClausaComm_Installer
 
         public static string GetCurrentInstallDirOrNull()
         {
-            using (RegistryKey key = Registry.LocalMachine.OpenSubKey(ClausaCommManipulation.ClausaCommManipulation.ClausaCommSubkeyPath))
+            using (RegistryKey key = ClausaCommManipulation.ClausaCommManipulation.RegKey.OpenSubKey(ClausaCommManipulation.ClausaCommManipulation.RegistryUninstallPath))
                 return key == null ? null : key.GetValue("InstallLocation").ToString().Replace("\"", "");
         }
 
