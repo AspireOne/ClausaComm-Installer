@@ -20,19 +20,19 @@ namespace ClausaComm_Installer.ClausaCommManipulation
         public ClausaCommInstallation(string installDir)
         {
             InstallDir = installDir;
-            ClausaCommExePath = Path.Combine(InstallDir, Program.ClausaCommExeName);
+            ClausaCommExePath = Path.Combine(InstallDir, Program.ExeName);
             UninstallerExePath = Path.Combine(InstallDir, ClausaCommUninstallation.UninstallerExeName);
         }
 
         public static bool IsInstalled()
         {
-            using (RegistryKey key = Registry.LocalMachine.OpenSubKey(ClausaCommSubkeyPath))
+            using (RegistryKey key = RegKey.OpenSubKey(RegistryUninstallPath))
             {
                 if (key == null || Directory.Exists(InstallationDir.GetCurrentInstallDirOrNull()))
                     return key != null;
                 
                 ConsoleUtils.Log("Registry value exists but the actual program directory doesn't. Deleting registry value.");
-                TryDoInstallationStep(() => Registry.LocalMachine.DeleteSubKey(ClausaCommSubkeyPath));
+                TryDoStep(() => RegKey.DeleteSubKey(RegistryUninstallPath));
                 return false;
 
             }
@@ -53,37 +53,76 @@ namespace ClausaComm_Installer.ClausaCommManipulation
             string[] extractedFilesFromBinary = { };
             var installationSteps = new[]
             {
-                new Tuple<Action, Action, string>(
-                    () => ExtractBinaries(out extractedFilesFromBinary),
+                new Tuple<Func<bool>, Action, string>(
+                    () =>
+                    {
+                        if (!Directory.Exists(InstallDir))
+                            Directory.CreateDirectory(InstallDir);
+                        return true;
+                    },
+                    () => Directory.Delete(InstallDir),
+                    LocalizedStrings.CouldNotExtractBinaries),
+
+                // -> Extract program binaries to program installation folder.
+                // <- Delete the extracted files in the installation folder.
+                new Tuple<Func<bool>, Action, string>(
+                    () =>
+                    {
+                        ExtractBinaries(out extractedFilesFromBinary);
+                        return true;
+                    },
                     () => extractedFilesFromBinary.ForEach(File.Delete),
                     LocalizedStrings.CouldNotExtractBinaries),
 
-                new Tuple<Action, Action, string>(
-                    () => File.Copy(GlobalPaths.ThisProgram, UninstallerExePath, true),
+                // -> Make a copy of the program exe to be used for invoking uninstallation.
+                // <- Delete the copied exe.
+                new Tuple<Func<bool>, Action, string>(
+                    () =>
+                    {
+                        File.Copy(GlobalPaths.ThisProgram, UninstallerExePath, true);
+                        return true;
+                    },
                     () => File.Delete(UninstallerExePath),
                     LocalizedStrings.CouldNotCopyInstallerToInstallationDir),
 
-                new Tuple<Action, Action, string>(
-                    AddRegistryValues,
-                    () => Registry.LocalMachine.DeleteSubKeyTree(ClausaCommSubkeyPath),
+                // -> Add needed registry values.
+                // <- Delete the program's subkey in registry.
+                new Tuple<Func<bool>, Action, string>(
+                    () =>
+                    {
+                        AddRegistryValues();
+                        return true;
+                    },
+                    () => RegKey.DeleteSubKeyTree(RegistryUninstallPath),
                     LocalizedStrings.CouldNotAddValuesToRegistry),
                 
-                new Tuple<Action, Action, string>(
+                // -> Add shortcuts to start menu.
+                // <- Remove shortcuts from start menu.
+                new Tuple<Func<bool>, Action, string>(
                     () => ProgramShortcuts.AddShortcutsToStartMenu(ClausaCommExePath, UninstallerExePath),
                     ProgramShortcuts.RemoveShortcutsFromStartMenu,
                     LocalizedStrings.CouldNotAddShortcutsToStartMenu),
 
-                new Tuple<Action, Action, string>(
+                // -> Add program shortcut to Desktop.
+                // <- Remove program shortcut from Desktop.
+                new Tuple<Func<bool>, Action, string>(
                     () => ProgramShortcuts.AddProgramShortcutToDesktop(ClausaCommExePath),
                     ProgramShortcuts.RemoveProgramShortcutFromDesktop,
                     LocalizedStrings.CouldNotAddShortcutToDesktop),
+                
+                // -> Set program to launch on PC startup.
+                // <- Set program to not launch on PC startup.
+                new Tuple<Func<bool>, Action, string>(
+                    () => SetLaunchOnStartup(true),
+                    () => SetLaunchOnStartup(false),
+                    LocalizedStrings.CouldNotSetLaunchOnStartup),
             };
 
             // Performs every installation step.
             string error = null;
             for (int instIndex = 0; instIndex < installationSteps.Length; ++instIndex)
             {
-                if (TryDoInstallationStep(installationSteps[instIndex].Item1))
+                if (TryDoStep(installationSteps[instIndex].Item1))
                     continue;
 
                 // Notes the error of the installation step that threw the error and starts reverting the steps from currIndex - 1.
@@ -92,7 +131,7 @@ namespace ClausaComm_Installer.ClausaCommManipulation
 
                 for (int uninstIndex = instIndex/* - 1*/; uninstIndex >= 0; --uninstIndex)
                 {
-                    bool success = TryDoInstallationStep(installationSteps[uninstIndex].Item2);
+                    bool success = TryDoStep(installationSteps[uninstIndex].Item2);
                     ConsoleUtils.Log("Revertion of step " + uninstIndex + " performed | succesfull: " + success);
                 }
 
@@ -102,12 +141,11 @@ namespace ClausaComm_Installer.ClausaCommManipulation
             finishedCallback.Invoke(error);
         }
 
-        private static bool TryDoInstallationStep(Action step)
+        private static bool TryDoStep(Func<bool> step)
         {
             try
             {
-                step.Invoke();
-                return true;
+                return step.Invoke();
             }
             catch (Exception e)
             {
@@ -116,18 +154,21 @@ namespace ClausaComm_Installer.ClausaCommManipulation
             }
         }
 
+        private static bool TryDoStep(Action action)
+        {
+            return TryDoStep(() =>
+            {
+                action();
+                return true;
+            });
+        }
+
         private void ExtractBinaries(out string[] extractedFilesPaths)
         {
-            if (!Directory.Exists(InstallDir))
-                Directory.CreateDirectory(InstallDir);
-
             File.WriteAllBytes(BinariesZipPath, Resources.binaries);
 
             string[] filesBeforeExtract = Directory.GetFiles(InstallDir).Concat(Directory.GetDirectories(InstallDir)).ToArray();
-
-            var unzipper = new FastZip();
-            unzipper.ExtractZip(BinariesZipPath, InstallDir, null);
-
+            new FastZip().ExtractZip(BinariesZipPath, InstallDir, null);
             string[] filesAfterExtract = Directory.GetFiles(InstallDir).Concat(Directory.GetDirectories(InstallDir)).ToArray();
 
             extractedFilesPaths = filesAfterExtract.Where(file => !filesBeforeExtract.Contains(file)).ToArray();
@@ -137,11 +178,33 @@ namespace ClausaComm_Installer.ClausaCommManipulation
         // Add to registry so that the program shows up in control panel's uninstall.
         private void AddRegistryValues()
         {
-            //TODO: Make this safer - try to not pass a whole ass path to createsubkey()
-            using (RegistryKey key = Registry.LocalMachine.CreateSubKey(ClausaCommSubkeyPath))
+            using RegistryKey key = RegKey.CreateSubKey(RegistryUninstallPath);
+            foreach (var pair in GetRegistryKeys())
+                key.SetValue(pair.Key, pair.Value);
+        }
+
+        private bool SetLaunchOnStartup(bool launch)
+        {
+            using var registryKey = RegKey.OpenSubKey(RegistryStartupPath, true);
+            if (registryKey == null)
             {
-                foreach (var pair in GetRegistryKeys())
-                    key.SetValue(pair.Key, pair.Value);
+                ConsoleUtils.Log("RegistryKey (SubKey) was null when trying to set run at startup.");
+                return false;
+            }
+
+            try
+            {
+                if (launch)
+                    registryKey.SetValue(Program.Name, $"\"{Path.Combine(InstallDir, Program.ExeName)}\" {Program.MinimizedArgument}");
+                else
+                    registryKey.DeleteValue(Program.Name, false);
+
+                return true;
+            }
+            catch (Exception e)
+            {
+                ConsoleUtils.Log(e);
+                return false;
             }
         }
 
@@ -152,10 +215,10 @@ namespace ClausaComm_Installer.ClausaCommManipulation
                 {"NoModify", 0x00000001},
                 {"NoRepair", 0x00000001},
                 {"Publisher", "Matěj Pešl <matejpesl1@gmail.com>"},
-                {"DisplayName", Program.ClausaCommName},
+                {"DisplayName", Program.Name},
                 {"UninstallString", '"' + Path.Combine(InstallDir, ClausaCommUninstallation.UninstallerExeName) + "\" " + ClausaCommUninstallation.UninstallArgument},
                 {"URLInfoAbout", "https://aspireone.github.io/ClausaComm/"},
-                {"DisplayIcon", '"' + Path.Combine(InstallDir, Program.ClausaCommExeName) + '"'},
+                {"DisplayIcon", '"' + Path.Combine(InstallDir, Program.ExeName) + '"'},
                 {"InstallLocation", '"' + InstallDir + '"'},
                 //{ "DisplayVersion", "Release" }
             };
