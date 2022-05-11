@@ -18,7 +18,7 @@ namespace ClausaComm_Installer.ClausaCommManipulation
             // Install dir is taken from registry, so we must first get the path and only then can we delete the registry.
             string installDir = InstallationDir.GetCurrentInstallDirOrNull();
 
-            bool deletedSubkey = TryDoUninstallationStep(() => Registry.LocalMachine.DeleteSubKey(ClausaCommSubkeyPath));
+            bool deletedSubkey = TryDoUninstallationStep(() => RegKey.DeleteSubKey(RegistryUninstallPath));
             bool shortcutsDeleted = ProgramShortcuts.RemoveAllShortcuts();
 
             SetUpUninstallTimer(installDir);
