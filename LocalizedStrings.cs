@@ -193,6 +193,22 @@ namespace ClausaComm_Installer
             }
         }
 
+        public static string CouldNotSetLaunchOnStartup
+        {
+            get
+            {
+                switch (CurrLang)
+                {
+                    case Language.English:
+                        return "Could not set program to launch on PC startup.";
+                    case Language.Czech:
+                        return "Nepovedlo se nastavit program pro zapnutí při spuštění PC.";
+                    default:
+                        throw new NotImplementedException();
+                }
+            }
+        }
+
         public static string CouldNotAddShortcutToDesktop
         {
             get
