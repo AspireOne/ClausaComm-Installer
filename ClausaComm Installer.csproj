@@ -10,7 +10,7 @@
     <RootNamespace>ClausaComm_Installer</RootNamespace>
     <AssemblyName>ClausaComm Installer</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
-    <LangVersion>3</LangVersion>
+    <LangVersion>latest</LangVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
