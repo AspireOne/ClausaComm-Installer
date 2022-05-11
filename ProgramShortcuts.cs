@@ -15,16 +15,16 @@ namespace ClausaComm_Installer
         #region Path initialization
 
         public static readonly string ProgramStartMenuDir =
-            Path.Combine(GlobalPaths.StartMenuDir, Program.ClausaCommName);
+            Path.Combine(GlobalPaths.StartMenuDir, Program.Name);
 
         public static readonly string ProgramStartMenuShortcut =
-            Path.Combine(ProgramStartMenuDir, Program.ClausaCommName + Extension);
+            Path.Combine(ProgramStartMenuDir, Program.Name + Extension);
 
         public static readonly string ProgramDesktopShortcut =
-            Path.Combine(GlobalPaths.Desktop, Program.ClausaCommName + Extension);
+            Path.Combine(GlobalPaths.Desktop, Program.Name + Extension);
 
         public static readonly string UninstallerStartMenuShortcut =
-            Path.Combine(ProgramStartMenuDir, "Uninstall " + Program.ClausaCommName + Extension);
+            Path.Combine(ProgramStartMenuDir, "Uninstall " + Program.Name + Extension);
 
         #endregion
 
@@ -38,7 +38,7 @@ namespace ClausaComm_Installer
             Directory.CreateDirectory(ProgramStartMenuDir);
                 
             bool programCreated =
-                CreateShortcut(ProgramStartMenuShortcut, programPath, Program.ProgramDescription, null);
+                CreateShortcut(ProgramStartMenuShortcut, programPath, Program.Description, null);
 
             bool uninstallerCreated = CreateShortcut(UninstallerStartMenuShortcut, uninstallerPath,
                 Program.UninstallerDescription, ClausaCommUninstallation.UninstallArgument);
@@ -61,7 +61,7 @@ namespace ClausaComm_Installer
 
         public static bool AddProgramShortcutToDesktop(string programPath)
         {
-            bool success = CreateShortcut(ProgramDesktopShortcut, programPath, Program.ProgramDescription, null);
+            bool success = CreateShortcut(ProgramDesktopShortcut, programPath, Program.Description, null);
             if (!success)
                 ConsoleUtils.Log("Could not create program shortcut on desktop.");
 
