@@ -10,9 +10,10 @@ namespace ClausaComm_Installer
 {
     internal static class Program
     {
-        public const string ClausaCommName = "ClausaComm";
-        public const string ClausaCommExeName = ClausaCommName + ".exe";
-        public const string ProgramDescription = "ClausaComm - a LAN chatting app.";
+        public const string Name = "ClausaComm";
+        public const string ExeName = Name + ".exe";
+        public const string Description = "ClausaComm - a LAN chatting app.";
+        public const string MinimizedArgument = "-minimized"; 
         public const string UninstallerDescription = "ClausaComm Uninstaller";
         public static readonly bool AlreadyInstalled = ClausaCommInstallation.IsInstalled();
 
