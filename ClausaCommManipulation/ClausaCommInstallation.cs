@@ -90,7 +90,7 @@ namespace ClausaComm_Installer.ClausaCommManipulation
                 new Tuple<Func<bool>, Action, string>(
                     () =>
                     {
-                        AddRegistryValues();
+                        RegisterInControlPanel();
                         return true;
                     },
                     () => RegKey.DeleteSubKeyTree(RegistryUninstallPath),
@@ -176,16 +176,16 @@ namespace ClausaComm_Installer.ClausaCommManipulation
         }
 
         // Add to registry so that the program shows up in control panel's uninstall.
-        private void AddRegistryValues()
+        private void RegisterInControlPanel()
         {
-            using RegistryKey key = RegKey.CreateSubKey(RegistryUninstallPath);
+            using RegistryKey regUninstallPathKey = RegKey.CreateSubKey(RegistryUninstallPath);
             foreach (var pair in GetRegistryKeys())
-                key.SetValue(pair.Key, pair.Value);
+                regUninstallPathKey.SetValue(pair.Key, pair.Value);
         }
 
         private bool SetLaunchOnStartup(bool launch)
         {
-            using var registryKey = RegKey.OpenSubKey(RegistryStartupPath, true);
+            using RegistryKey registryKey = RegKey.OpenSubKey(RegistryStartupPath, true);
             if (registryKey == null)
             {
                 ConsoleUtils.Log("RegistryKey (SubKey) was null when trying to set run at startup.");

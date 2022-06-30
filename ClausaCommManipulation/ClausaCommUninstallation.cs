@@ -19,13 +19,21 @@ namespace ClausaComm_Installer.ClausaCommManipulation
             string installDir = InstallationDir.GetCurrentInstallDirOrNull();
 
             bool deletedSubkey = TryDoUninstallationStep(() => RegKey.DeleteSubKey(RegistryUninstallPath));
+            bool deletedRunOnStartupKey = TryDoUninstallationStep(() =>
+            {
+                using var key = Registry.CurrentUser.OpenSubKey(RegistryStartupPath, true);
+                key.DeleteValue("ClausaComm");
+            });
             bool shortcutsDeleted = ProgramShortcuts.RemoveAllShortcuts();
 
             SetUpUninstallTimer(installDir);
 
-            ConsoleUtils.Log("Uninstallation completed.\ndeleted subkey: " + deletedSubkey + "\nall shortcuts deleted: " + shortcutsDeleted);
+            ConsoleUtils.Log($"Uninstallation completed." +
+                             $"\nDeleted subkey: {deletedSubkey}" +
+                             $"\nAll shortcuts deleted: {shortcutsDeleted}" +
+                             $"\nDeleted RunOnStartup key: {deletedRunOnStartupKey}");
 
-            completedCallback.Invoke(deletedSubkey);
+            completedCallback.Invoke(deletedSubkey && deletedRunOnStartupKey && shortcutsDeleted);
         }
         
         private static bool TryDoUninstallationStep(Action action)
